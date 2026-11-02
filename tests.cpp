@@ -8,6 +8,9 @@ TEST_CASE("Commutative Law of Addition: A+B = B+A", "[matrix][algebra]") {
     Matrix A(n, n);
     Matrix B(n, n);
 
+    A.Randomize();
+    B.Randomize();
+
     Matrix left = A + B;
     Matrix right = B + A;
 
@@ -20,6 +23,10 @@ TEST_CASE("Associative Law of Addition: A + (B + C) = (A + B) + C", "[matrix][al
     Matrix A(n, n);
     Matrix B(n, n);
     Matrix C(n, n);
+
+    A.Randomize();
+    B.Randomize();
+    C.Randomize();
 
     Matrix left = A + (B + C);
     Matrix right = (A + B) + C;
@@ -34,6 +41,10 @@ TEST_CASE("Distributive Law of a Scalar over Matrices: c(A + B) = cA + cB", "[ma
     Matrix B(n, n);
     Matrix C(n, n);
 
+    A.Randomize();
+    B.Randomize();
+    C.Randomize();
+
     uint64_t scalar = 8;
 
     Matrix left = scalar*(A+B);
@@ -47,14 +58,33 @@ TEST_CASE("Distributive Law of Scalars over a Matrix: (c1 + c2)A = c1A + c2A", "
     uint64_t n = 8;
     Matrix A(n, n);
 
+    A.Randomize();
+
     uint64_t c1 = 2;
     uint64_t c2 = 3;
-    
+
     Matrix left = (c1 + c2)*A;
     Matrix right = (c1*A) + (c2*A);
 
     REQUIRE(left == right);
 } 
+
+TEST_CASE("Associative Law of Scalar Multiplication: c1(c2A) = (c1*c2)A", "[matrix][algebra]") {
+    
+    uint64_t n = 8;
+    Matrix A(n, n);
+
+    A.Randomize();
+
+    uint64_t c1 = 2;
+    uint64_t c2 = 3;
+
+    Matrix left = c1*(c2*A);
+    Matrix right = (c1*c2)*A;
+
+    REQUIRE(left == right);
+
+}
 
 TEST_CASE("Right Distributive law: A(B+C) = AB + AC", "[matrix][algebra]") {
 
@@ -124,6 +154,8 @@ TEST_CASE("Identity matrix: AI = IA = A", "[matrix][algebra]") {
     Matrix A(n, n);
     Matrix I = Matrix::Identity(n);
 
+    A.Randomize();
+
     Matrix left = A*I;
     Matrix middle = I*A;
 
@@ -137,6 +169,8 @@ TEST_CASE("Zero matrix product: A0 = 0A = 0", "[matrix][algebra]") {
     uint64_t n = 3;
     Matrix A(n, n);
     Matrix Z = Matrix::Zeroes(n);
+
+    A.Randomize();
 
     Matrix left = A*Z;
     Matrix middle = Z*A;
@@ -163,7 +197,7 @@ TEST_CASE("Zero divisors: AB = 0 does not imply A = 0 or B = 0", "[matrix][algeb
     Matrix A(n, n);
     Matrix B(n, n);
     Matrix Z = Matrix::Zeroes(n);
-
+    
     A.InsertAtCoord(1, 0, 0);
     B.InsertAtCoord(1, 1, 1);
 
