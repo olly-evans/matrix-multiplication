@@ -103,5 +103,17 @@ TEST_CASE("Incompatible dimensions: AB may not be possible", "[matrix][algebra]"
     REQUIRE_THROWS(A*B);
 }
 
-// TEST_CASE("Zero divisors: AB = 0 does not imply A = 0 or B = 0", "[matrix][algebra]") {
-// }
+TEST_CASE("Zero divisors: AB = 0 does not imply A = 0 or B = 0", "[matrix][algebra]") {
+
+    uint64_t n = 2;
+    Matrix A(n, n);
+    Matrix B(n, n);
+    Matrix Z = Matrix::Zeroes(n);
+
+    A.InsertAtCoord(1, 0, 0);
+    B.InsertAtCoord(1, 1, 1);
+
+    REQUIRE_FALSE(A == Z); 
+    REQUIRE_FALSE(B == Z); 
+    REQUIRE(A * B == Z);
+}
