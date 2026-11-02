@@ -17,7 +17,7 @@ class Matrix {
     public:
 
         Matrix(uint64_t rows, uint64_t cols);
-        
+
         static Matrix Identity(uint64_t n);
         static Matrix Zeroes(uint64_t n);
 
@@ -31,12 +31,14 @@ class Matrix {
 
         Matrix operator+(const Matrix& B) const;
         Matrix operator-(const Matrix& B) const;
+
         Matrix operator*(const Matrix& B) const;
+
         bool operator==(const Matrix& B) const;
 
         [[nodiscard]] uint64_t GetRows() const;
         [[nodiscard]] uint64_t GetCols() const;
-        [[nodiscard]] int64_t GetElement(uint64_t index) const;
+        [[nodiscard]] int64_t At(uint64_t index) const;
 
         void Randomize();
 
@@ -50,3 +52,6 @@ class Matrix {
         uint64_t elements;
     
 };
+
+Matrix operator*(int64_t scalar, const Matrix& M);
+Matrix operator*(const Matrix& M, int64_t scalar);   

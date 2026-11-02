@@ -2,6 +2,46 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+TEST_CASE("Commutative Law of Addition: A+B = B+A", "[matrix][algebra]") {
+
+    uint64_t n = 2;
+    Matrix A(n, n);
+    Matrix B(n, n);
+
+    Matrix left = A + B;
+    Matrix right = B + A;
+
+    REQUIRE(left == right);
+}
+
+TEST_CASE("Associative Law of Addition: A + (B + C) = (A + B) + C", "[matrix][algebra]") {
+    
+    uint64_t n = 5;
+    Matrix A(n, n);
+    Matrix B(n, n);
+    Matrix C(n, n);
+
+    Matrix left = A + (B + C);
+    Matrix right = (A + B) + C;
+
+    REQUIRE(left == right);
+}
+
+TEST_CASE("Distributive Law of a Scalar over Matrices: c(A + B) = cA + cB", "[matrix][algebra]") {
+    
+    uint64_t n = 5;
+    Matrix A(n, n);
+    Matrix B(n, n);
+    Matrix C(n, n);
+
+    uint64_t scalar = 8;
+
+    Matrix left = scalar*(A+B);
+    Matrix right = scalar*A + scalar*B;
+
+    REQUIRE(left == right);
+}
+
 TEST_CASE("Right Distributive law: A(B+C) = AB + AC", "[matrix][algebra]") {
 
     Matrix A(2, 2);

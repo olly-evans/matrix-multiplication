@@ -1,4 +1,3 @@
-
 #include "matrix.h"
 
 Matrix::Matrix(uint64_t nRows, uint64_t nCols) : 
@@ -11,7 +10,7 @@ Matrix Matrix::Identity(uint64_t n) {
     Matrix I(n, n);
     int64_t value = static_cast<int64_t>(1);
 
-    for (uint64_t i = 0; i < n; ++i)
+    for (uint64_t i = 0; i < n; i++)
         I.InsertAtCoord(value, i, i);
     return I;
 }
@@ -20,9 +19,9 @@ Matrix Matrix::Zeroes(uint64_t n) {
     Matrix Z(n, n);
     int64_t value = static_cast<int64_t>(0);
 
-    for (uint64_t i = 0; i < n; ++i)
+    for (uint64_t i = 0; i < n; i++)
         Z.InsertAtCoord(value, i, i);
-        
+
     return Z;
 }
 
@@ -45,16 +44,29 @@ uint64_t CheckedSize(uint64_t r, uint64_t c) {
     return n;
 }
 
+Matrix operator*(int64_t scalar, const Matrix& M) {
+    Matrix R(M.GetRows(), M.GetCols());
+
+    for (uint64_t i = 0; i < R.Size(); ++i) {
+        R.InsertAtIndex(scalar*M.At(i), i);
+    }
+    return R;
+}
+
+Matrix operator*(const Matrix& M, int64_t scalar) {
+    return scalar * M;
+}
+
 void Matrix::Print() const {
 
     for (uint64_t i = 0; i < elements; i++) {
         
         /* If at end of row print new-line instead of comma. */
         if ((i % cols) < cols-1) {
-            std::cout << GetElement(i) << ",";
+            std::cout << At(i) << ",";
             continue;
         }
-        std::cout << GetElement(i) << "\n";
+        std::cout << At(i) << "\n";
     }
 }
 
@@ -94,7 +106,7 @@ Matrix Matrix::operator+(const Matrix& B) const {
     Matrix C(A.GetRows(), A.GetCols());
 
     for (uint64_t i = 0; i < A.elements; i++) {
-        int64_t value = A.GetElement(i) + B.GetElement(i);
+        int64_t value = A.At(i) + B.At(i);
         C.InsertAtIndex(value, i);
     }
     
@@ -115,7 +127,7 @@ Matrix Matrix::operator-(const Matrix& B) const {
     Matrix C(A.GetRows(), A.GetCols());
 
     for (uint64_t i = 0; i < A.elements; i++) {
-        int64_t value = A.GetElement(i) - B.GetElement(i);
+        int64_t value = A.At(i) - B.At(i);
         C.InsertAtIndex(value, i);
     }
 
@@ -149,7 +161,7 @@ Matrix Matrix::operator*(const Matrix& B) const {
             uint64_t nextRowElement = rowStart + i;
             uint64_t nextColElement = colStart + (i*B.GetCols());
 
-            sum += A.GetElement(nextRowElement) * B.GetElement(nextColElement);
+            sum += A.At(nextRowElement) * B.At(nextColElement);
         }
 
         C.InsertAtIndex(sum, index);
@@ -165,7 +177,7 @@ bool Matrix::operator==(const Matrix& B) const {
         return false;
 
     for (uint64_t i = 0; i < Size(); i++) {
-        if (A.GetElement(i) != B.GetElement(i))
+        if (A.At(i) != B.At(i))
             return false;
     }
 
@@ -180,7 +192,7 @@ uint64_t Matrix::GetCols() const {
     return cols;
 }
 
-int64_t Matrix::GetElement(uint64_t index) const {
+int64_t Matrix::At(uint64_t index) const {
     return *(data + index);
 }
 
