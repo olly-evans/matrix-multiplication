@@ -15,8 +15,8 @@ class Matrix {
         Matrix(uint64_t rows, uint64_t cols);
         ~Matrix();
 
-        uint64_t GetRows();
-        uint64_t GetCols();
+        void Insert(uint64_t value, uint64_t index);
+
 
         uint64_t* Data();
 
@@ -24,12 +24,12 @@ class Matrix {
 
         void Print();
 
-        void Insert(uint64_t value, uint64_t index);
 
         void Add(Matrix& added);
-        Matrix Subtract(Matrix subtracted);
+        void Subtract(Matrix& subtract);
 
         Matrix Multiply(Matrix multiplied);
 
-
+        uint64_t GetRows();
+        uint64_t GetCols();
 };
