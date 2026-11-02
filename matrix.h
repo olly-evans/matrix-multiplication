@@ -1,6 +1,10 @@
 #pragma once
 #include <cstdint>
-#include <array>
+
+constexpr uint64_t MAX_BYTES    = 1ULL << 30;
+constexpr uint64_t MAX_ELEMENTS = MAX_BYTES / sizeof(int64_t);
+
+static uint64_t checkedSize(uint64_t r, uint64_t c);
 
 class Matrix {
     public:
@@ -11,23 +15,25 @@ class Matrix {
         void Print() const;
         [[nodiscard]] uint64_t Size() const;
 
-        void InsertAtIndex(uint64_t value, uint64_t index);
-        void InsertAtCoord(uint64_t value, uint64_t row, uint64_t col);
+        void InsertAtIndex(int64_t value, uint64_t index);
+        void InsertAtCoord(int64_t value, uint64_t row, uint64_t col);
 
         Matrix operator+(const Matrix& B) const;
         
-        void Subtract(Matrix& B);
+        Matrix operator-(const Matrix& B) const;
         Matrix Multiply(Matrix& B) const;
 
         [[nodiscard]] uint64_t GetRows() const;
         [[nodiscard]] uint64_t GetCols() const;
-        [[nodiscard]] uint64_t GetElement(uint64_t index) const;
+        [[nodiscard]] int64_t GetElement(uint64_t index) const;
 
     private:
-        uint64_t* data;
+        
+        int64_t* data;
 
         uint64_t rows;
         uint64_t cols;
+
         uint64_t elements;
     
 };

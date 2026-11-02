@@ -2,34 +2,44 @@
 #include "matrix.h"
 
 #include <iostream>
+#include <limits>
+#include <stdexcept>
 
 Matrix::Matrix(uint64_t nRows, uint64_t nCols) : 
-    rows(nRows), 
-    cols(nCols),
-    elements(nRows*nCols) {
+    rows(nRows), cols(nCols), elements(checkedSize(nRows, nCols)) {
 
-    if (nRows < 0 || nCols < 0)
-        std::cerr << "Dimension of Matrix cannot be less than zero." << std::endl;
-
-    data = new uint64_t[rows * cols]();
+    data = new int64_t[rows * cols]();
 }
 
 Matrix::~Matrix() {
     delete[] data;
 }
 
+static uint64_t checkedSize(uint64_t r, uint64_t c) {
+
+    if (r == 0 || c == 0)
+        throw std::invalid_argument("Matrix dimension must be non-zero");
+
+    if (r > std::numeric_limits<uint64_t>::max() / c)
+        throw std::overflow_error("Matrix size overflows");
+
+    uint64_t n = r * c;
+    if (n > MAX_ELEMENTS)
+        throw std::length_error("Matrix too large");
+    
+    return n;
+}
+
 void Matrix::Print() const {
 
     for (uint64_t i = 0; i < elements; i++) {
-
-        uint64_t element = *(data + i);
         
         /* If at end of row print new-line instead of comma. */
         if ((i % cols) < cols-1) {
-            std::cout << element << ",";
+            std::cout << GetElement(i) << ",";
             continue;
         }
-        std::cout << element << "\n";
+        std::cout << GetElement(i) << "\n";
     }
 }
 
@@ -37,22 +47,22 @@ uint64_t Matrix::Size() const {
     return elements;
 }
 
-void Matrix::InsertAtIndex(uint64_t value, uint64_t index) {
+void Matrix::InsertAtIndex(int64_t value, uint64_t index) {
 
     if (!(index < Size()))
         std::cerr << "Index is out of matrix bounds - cannot insert." << std::endl;
-    uint64_t* dest = data + index;
+    int64_t* dest = data + static_cast<int64_t>(index);
     *dest = value;
 }
 
-void Matrix::InsertAtCoord(uint64_t value, uint64_t row, uint64_t col) {
+void Matrix::InsertAtCoord(int64_t value, uint64_t row, uint64_t col) {
 
     uint64_t index = row*cols + col;
 
     if (!(index < Size()))
         std::cerr << "Coordinate is out of matrix bounds - cannot insert." << std::endl;
 
-    uint64_t* dest = data + index;
+    int64_t* dest = data + static_cast<int64_t>(index);
     *dest = value;
 }
 
@@ -69,7 +79,7 @@ Matrix Matrix::operator+(const Matrix& B) const {
     Matrix C(A.GetRows(), A.GetCols());
 
     for (uint64_t i = 0; i < A.elements; i++) {
-        uint64_t value = A.GetElement(i) + B.GetElement(i);
+        int64_t value = A.GetElement(i) + B.GetElement(i);
         C.InsertAtIndex(value, i);
     }
     
@@ -77,7 +87,7 @@ Matrix Matrix::operator+(const Matrix& B) const {
 
 }
 
-void Matrix::Subtract(Matrix& B) {
+Matrix Matrix::operator-(const Matrix& B) const {
     
     const Matrix& A = *this;
 
@@ -87,10 +97,14 @@ void Matrix::Subtract(Matrix& B) {
     if (A.GetRows() != B.GetCols())
         std::cerr << "Col number mismatch - cannot subtract." << std::endl;
 
+    Matrix C(A.GetRows(), A.GetCols());
+
     for (uint64_t i = 0; i < A.elements; i++) {
-        uint64_t value = A.GetElement(i) - B.GetElement(i);
-        InsertAtIndex(value, i);
+        int64_t value = A.GetElement(i) - B.GetElement(i);
+        C.InsertAtIndex(value, i);
     }
+
+    return C;
 }
 
 Matrix Matrix::Multiply(Matrix& B) const {
@@ -104,11 +118,11 @@ Matrix Matrix::Multiply(Matrix& B) const {
 
     for (uint64_t index = 0; index < C.Size(); index++) {
 
-        uint64_t sum = 0;
+        int64_t sum = 0;
 
         /* Filling out new matrix. Hence result dimensions. */
-        const uint64_t row = index / C.GetCols(); // 2 / 2 = 1
-        const uint64_t col = index % C.GetCols(); // 2 % 2 = 0
+        const uint64_t row = index / C.GetCols();
+        const uint64_t col = index % C.GetCols(); 
 
         /* First element index in required row/col */
         const uint64_t rowStart = row*A.GetCols();
@@ -136,7 +150,7 @@ uint64_t Matrix::GetCols() const {
     return cols;
 }
 
-uint64_t Matrix::GetElement(uint64_t index) const {
+int64_t Matrix::GetElement(uint64_t index) const {
     return *(data + index);
 }
 
@@ -157,7 +171,7 @@ int main() {
     std::cout << "\n";
     m2.Print();
 
-    Matrix result = m1 + m2;
+    Matrix result = m1 - m2;
 
     std::cout << "\n";
     result.Print();
