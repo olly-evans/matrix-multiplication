@@ -2,7 +2,6 @@
 #include "matrix.h"
 
 #include <iostream>
-#include <cstdlib>
 
 Matrix::Matrix(uint64_t nRows, uint64_t nCols) : 
     rows(nRows), 
@@ -13,16 +12,11 @@ Matrix::Matrix(uint64_t nRows, uint64_t nCols) :
     if (nRows < 0 || nCols < 0)
         std::cout << "Dimensions of Matrix cannot be less than zero." << "\n";
 
-    data = static_cast<uint64_t*>(malloc(rows * cols * sizeof(*data)));
+    data = new uint64_t[rows * cols]();
 }
 
 Matrix::~Matrix() {
     delete[] data;
-}
-
-void Matrix::Insert(uint64_t value, uint64_t index) {
-    uint64_t* dest = data + index;
-    *dest = value;
 }
 
 void Matrix::Print() {
@@ -39,16 +33,13 @@ void Matrix::Print() {
     }
 }
 
-uint64_t* Matrix::Data() {
-    return data;
-}
-
 uint64_t Matrix::Size() {
     return elements;
 }
 
-uint64_t Matrix::GetElement(uint64_t index) {
-    return *(data + index);
+void Matrix::Insert(uint64_t value, uint64_t index) {
+    uint64_t* dest = data + index;
+    *dest = value;
 }
 
 void Matrix::Add(Matrix& B) {
@@ -80,10 +71,10 @@ void Matrix::Subtract(Matrix& B) {
 
 Matrix Matrix::Multiply(Matrix& B) {
     
-    if (cols != B.GetRows())
+    if (GetCols() != B.GetRows())
         std::cerr << "Matrix A must have cols equal to rows of Matrix B to multiply.";
 
-    Matrix result = Matrix(rows, B.GetCols());
+    Matrix result = Matrix(GetRows(), B.GetCols());
 
     for (uint64_t index = 0; index < result.Size(); index++) {
 
@@ -117,6 +108,10 @@ uint64_t Matrix::GetRows() {
 
 uint64_t Matrix::GetCols() {
     return cols;
+}
+
+uint64_t Matrix::GetElement(uint64_t index) {
+    return *(data + index);
 }
 
 int main() {
