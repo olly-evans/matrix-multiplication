@@ -58,27 +58,32 @@ void Matrix::InsertAtCoord(uint64_t value, uint64_t row, uint64_t col) {
 
 void Matrix::Add(Matrix& B) {
     
-    if (rows != B.GetRows())
+    const Matrix& A = *this;
+
+    if (A.GetRows() != B.GetRows())
         std::cerr << "Row number mismatch - cannot add." << std::endl;
 
-    if (cols != B.GetCols())
+    if (A.GetCols() != B.GetCols())
         std::cerr << "Column number mismatch - cannot add." << std::endl;
 
-    for (uint64_t i = 0; i < elements; i++) {
-        uint64_t value = GetElement(i) + B.GetElement(i);
+    for (uint64_t i = 0; i < A.elements; i++) {
+        uint64_t value = A.GetElement(i) + B.GetElement(i);
         InsertAtIndex(value, i);
     }
 }
 
 void Matrix::Subtract(Matrix& B) {
-    if (rows != B.GetRows())
+    
+    const Matrix& A = *this;
+
+    if (A.GetRows() != B.GetRows())
         std::cerr << "Row number mismatch - cannot subtract." << std::endl;
     
-    if (cols != B.GetCols())
+    if (A.GetRows() != B.GetCols())
         std::cerr << "Col number mismatch - cannot subtract." << std::endl;
 
-    for (uint64_t i = 0; i < elements; i++) {
-        uint64_t value = GetElement(i) - B.GetElement(i);
+    for (uint64_t i = 0; i < A.elements; i++) {
+        uint64_t value = A.GetElement(i) - B.GetElement(i);
         InsertAtIndex(value, i);
     }
 }
