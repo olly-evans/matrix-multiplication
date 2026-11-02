@@ -2,6 +2,18 @@
 
 #include <catch2/catch_test_macros.hpp>
 
+TEST_CASE("Test Matrix equals operator", "Matrix::operator==") {
+
+    uint64_t n = 5;
+    Matrix A(n, n);
+    Matrix B(n, n);
+    
+    A.InsertAtCoord(5, 0, 0);
+    B.InsertAtCoord(5, 0, 0);
+
+    REQUIRE(A == B);
+}
+
 TEST_CASE("Commutative Law of Addition: A+B = B+A", "[matrix][algebra]") {
 
     uint64_t n = 2;
