@@ -18,7 +18,7 @@ Matrix::~Matrix() {
     delete[] data;
 }
 
-void Matrix::Print() {
+void Matrix::Print() const {
 
     for (uint64_t i = 0; i < elements; i++) {
 
@@ -32,7 +32,7 @@ void Matrix::Print() {
     }
 }
 
-uint64_t Matrix::Size() {
+uint64_t Matrix::Size() const {
     return elements;
 }
 
@@ -82,48 +82,50 @@ void Matrix::Subtract(Matrix& B) {
     }
 }
 
-Matrix Matrix::Multiply(Matrix& B) {
+Matrix Matrix::Multiply(Matrix& B) const {
     
-    if (GetCols() != B.GetRows())
+    const Matrix& A = *this;
+
+    if (A.GetCols() != B.GetRows())
         std::cerr << "Matrix A must have columns equal to rows of Matrix B to multiply." << std::endl;
 
-    Matrix result(GetRows(), B.GetCols());
+    Matrix C(A.GetRows(), B.GetCols());
 
-    for (uint64_t index = 0; index < result.Size(); index++) {
+    for (uint64_t index = 0; index < C.Size(); index++) {
 
         uint64_t sum = 0;
 
         /* Filling out new matrix. Hence result dimensions. */
-        const uint64_t row = index / result.GetCols(); // 2 / 2 = 1
-        const uint64_t col = index % result.GetCols(); // 2 % 2 = 0
+        const uint64_t row = index / C.GetCols(); // 2 / 2 = 1
+        const uint64_t col = index % C.GetCols(); // 2 % 2 = 0
 
         /* First element index in required row/col */
-        const uint64_t rowStart = row*GetCols();
+        const uint64_t rowStart = row*A.GetCols();
         const uint64_t colStart = col;
 
-        for (uint64_t i = 0; i < GetRows(); i++) {
+        for (uint64_t i = 0; i < A.GetRows(); i++) {
 
             /* Incrementing over  appropriate row and column. */
             uint64_t nextRowElement = rowStart + i;
             uint64_t nextColElement = colStart + (i*B.GetCols());
 
-            sum += GetElement(nextRowElement) * B.GetElement(nextColElement);
+            sum += A.GetElement(nextRowElement) * B.GetElement(nextColElement);
         }
 
-        result.InsertAtIndex(sum, index);
+        C.InsertAtIndex(sum, index);
     }
-    return result;
+    return C;
 }
 
-uint64_t Matrix::GetRows() {
+uint64_t Matrix::GetRows() const {
     return rows;
 }
 
-uint64_t Matrix::GetCols() {
+uint64_t Matrix::GetCols() const {
     return cols;
 }
 
-uint64_t Matrix::GetElement(uint64_t index) {
+uint64_t Matrix::GetElement(uint64_t index) const {
     return *(data + index);
 }
 
