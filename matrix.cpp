@@ -1,21 +1,36 @@
 
 #include "matrix.h"
 
-#include <iostream>
-#include <limits>
-#include <stdexcept>
-
 Matrix::Matrix(uint64_t nRows, uint64_t nCols) : 
-    rows(nRows), cols(nCols), elements(checkedSize(nRows, nCols)) {
+    rows(nRows), cols(nCols), elements(CheckedSize(nRows, nCols)) {
 
     data = new int64_t[rows * cols]();
+}
+
+Matrix Matrix::Identity(uint64_t n) {
+    Matrix I(n, n);
+    int64_t value = static_cast<int64_t>(1);
+
+    for (uint64_t i = 0; i < I.Size(); ++i)
+        I.InsertAtCoord(value, i, i);
+    return I;
+}
+
+Matrix Matrix::Zeroes(uint64_t n) {
+    Matrix Z(n, n);
+    int64_t value = static_cast<int64_t>(0);
+
+    for (uint64_t i = 0; i < Z.Size(); ++i) {
+        Z.InsertAtCoord(value, i, i);
+    }
+    return Z;
 }
 
 Matrix::~Matrix() {
     delete[] data;
 }
 
-static uint64_t checkedSize(uint64_t r, uint64_t c) {
+uint64_t CheckedSize(uint64_t r, uint64_t c) {
 
     if (r == 0 || c == 0)
         throw std::invalid_argument("Matrix dimension must be non-zero");
@@ -107,12 +122,12 @@ Matrix Matrix::operator-(const Matrix& B) const {
     return C;
 }
 
-Matrix Matrix::Multiply(Matrix& B) const {
+Matrix Matrix::operator*(const Matrix& B) const {
     
     const Matrix& A = *this;
 
     if (A.GetCols() != B.GetRows())
-        std::cerr << "Matrix A must have columns equal to rows of Matrix B to multiply." << std::endl;
+        throw std::invalid_argument("Matrix A must have columns equal to rows of Matrix B to multiply.");
 
     Matrix C(A.GetRows(), B.GetCols());
 
@@ -142,6 +157,21 @@ Matrix Matrix::Multiply(Matrix& B) const {
     return C;
 }
 
+bool Matrix::operator==(const Matrix& B) const {
+    
+    const Matrix& A = *this;
+
+    if (A.GetCols() != B.GetCols() || A.GetRows() != B.GetRows())
+        return false;
+
+    for (uint64_t i = 0; i < Size(); i++) {
+        if (A.GetElement(i) != B.GetElement(i))
+            return false;
+    }
+
+    return true;
+}
+
 uint64_t Matrix::GetRows() const {
     return rows;
 }
@@ -154,26 +184,36 @@ int64_t Matrix::GetElement(uint64_t index) const {
     return *(data + index);
 }
 
-int main() {
+void Matrix::Randomize() {
 
-    /* 3x3 and 3x3 example. */
-    Matrix m1(3, 3);
-    Matrix m2(3, 3);
-    
-    m1.InsertAtCoord(3, 0, 0);
-    m1.InsertAtCoord(5, 2, 0);
-    m1.InsertAtCoord(2, 1, 1);
-
-    m2.InsertAtCoord(5, 0, 0);
-    m2.InsertAtCoord(5, 2, 2);
-
-    m1.Print();
-    std::cout << "\n";
-    m2.Print();
-
-    Matrix result = m1 - m2;
-
-    std::cout << "\n";
-    result.Print();
-
+    for (uint64_t i = 0; i < Size(); i++) {
+        int64_t num = rand() % (MAX_RANDOM_ELEMENT + 1);
+        InsertAtIndex(num, i);
+    }
 }
+
+// int main() {
+
+//     /* 3x3 and 3x3 example. */
+//     Matrix m1(3, 3);
+//     Matrix m2(3, 3);
+//     Matrix I = Matrix::Identity(12);
+//     Matrix Z = Matrix::Zeroes(3);
+    
+//     m1.Randomize();
+//     m2.Randomize();
+
+//     m1.Print();
+//     std::cout << "\n";
+//     m2.Print();
+//     std::cout << "\n";
+//     I.Print();
+//     std::cout << "\n";
+//     Z.Print();
+
+//     Matrix result = m1 * m2;
+
+//     std::cout << "\n";
+//     result.Print();
+
+// }
