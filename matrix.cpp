@@ -56,7 +56,7 @@ void Matrix::InsertAtCoord(uint64_t value, uint64_t row, uint64_t col) {
     *dest = value;
 }
 
-void Matrix::Add(Matrix& B) {
+Matrix Matrix::operator+(const Matrix& B) const {
     
     const Matrix& A = *this;
 
@@ -66,10 +66,15 @@ void Matrix::Add(Matrix& B) {
     if (A.GetCols() != B.GetCols())
         std::cerr << "Column number mismatch - cannot add." << std::endl;
 
+    Matrix C(A.GetRows(), A.GetCols());
+
     for (uint64_t i = 0; i < A.elements; i++) {
         uint64_t value = A.GetElement(i) + B.GetElement(i);
-        InsertAtIndex(value, i);
+        C.InsertAtIndex(value, i);
     }
+    
+    return C;
+
 }
 
 void Matrix::Subtract(Matrix& B) {
@@ -152,7 +157,7 @@ int main() {
     std::cout << "\n";
     m2.Print();
 
-    Matrix result = m1.Multiply(m2);
+    Matrix result = m1 + m2;
 
     std::cout << "\n";
     result.Print();
