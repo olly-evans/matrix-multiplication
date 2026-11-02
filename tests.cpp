@@ -92,8 +92,16 @@ TEST_CASE("Zero matrix product: A0 = 0A = 0", "[matrix][algebra]") {
     REQUIRE(middle == Z);
 }
 
-// TEST_CASE("Incompatible dimensions: AB may not be possible", "[matrix][algebra]") {
-// }
+TEST_CASE("Incompatible dimensions: AB may not be possible", "[matrix][algebra]") {
+
+    Matrix A(3, 5);
+    Matrix B(3, 5);
+
+    A.Randomize();
+    B.Randomize();
+
+    REQUIRE_THROWS(A*B);
+}
 
 // TEST_CASE("Zero divisors: AB = 0 does not imply A = 0 or B = 0", "[matrix][algebra]") {
 // }
