@@ -14,9 +14,9 @@ class Matrix {
         void InsertAtIndex(uint64_t value, uint64_t index);
         void InsertAtCoord(uint64_t value, uint64_t row, uint64_t col);
 
-        void Add(Matrix& added);
-        void Subtract(Matrix& subtract);
-        Matrix Multiply(Matrix& multiply) const;
+        void Add(Matrix& B);
+        void Subtract(Matrix& B);
+        Matrix Multiply(Matrix& B) const;
 
         [[nodiscard]] uint64_t GetRows() const;
         [[nodiscard]] uint64_t GetCols() const;

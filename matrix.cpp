@@ -137,6 +137,7 @@ uint64_t Matrix::GetElement(uint64_t index) const {
 
 int main() {
 
+    /* 3x3 and 3x3 example. */
     Matrix m1(3, 3);
     Matrix m2(3, 3);
     
