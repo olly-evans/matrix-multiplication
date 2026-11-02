@@ -85,7 +85,7 @@ uint64_t Matrix::Size() const {
 void Matrix::InsertAtIndex(int64_t value, uint64_t index) {
 
     if (!(index < Size()))
-        std::cerr << "Index is out of matrix bounds - cannot insert." << std::endl;
+        throw std::invalid_argument("Index out of matrix bounds - cannot insert.");
     int64_t* dest = data + static_cast<int64_t>(index);
     *dest = value;
 }
@@ -95,7 +95,7 @@ void Matrix::InsertAtCoord(int64_t value, uint64_t row, uint64_t col) {
     uint64_t index = row*cols + col;
 
     if (!(index < Size()))
-        std::cerr << "Coordinate is out of matrix bounds - cannot insert." << std::endl;
+        throw std::invalid_argument("Coordinate is out of matrix bounds - cannot insert.");
 
     int64_t* dest = data + static_cast<int64_t>(index);
     *dest = value;
@@ -106,10 +106,10 @@ Matrix Matrix::operator+(const Matrix& B) const {
     const Matrix& A = *this;
 
     if (A.GetRows() != B.GetRows())
-        std::cerr << "Row number mismatch - cannot add." << std::endl;
+        throw std::invalid_argument("Row size mismatch - cannot add.");
 
     if (A.GetCols() != B.GetCols())
-        std::cerr << "Column number mismatch - cannot add." << std::endl;
+        throw std::invalid_argument("Column size mismatch - cannot add.");
 
     Matrix C(A.GetRows(), A.GetCols());
 
@@ -127,10 +127,10 @@ Matrix Matrix::operator-(const Matrix& B) const {
     const Matrix& A = *this;
 
     if (A.GetRows() != B.GetRows())
-        std::cerr << "Row number mismatch - cannot subtract." << std::endl;
+        throw std::invalid_argument("Row size mismatch - cannot subtract.");
     
     if (A.GetRows() != B.GetCols())
-        std::cerr << "Col number mismatch - cannot subtract." << std::endl;
+        throw std::invalid_argument("Column size mismatch - cannot subtract.");
 
     Matrix C(A.GetRows(), A.GetCols());
 
