@@ -24,6 +24,7 @@ void Matrix::Print() const {
 
         uint64_t element = *(data + i);
         
+        /* If at end of row print new-line instead of comma. */
         if ((i % cols) < cols-1) {
             std::cout << element << ",";
             continue;
