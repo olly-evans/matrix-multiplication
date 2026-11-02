@@ -11,7 +11,7 @@ Matrix Matrix::Identity(uint64_t n) {
     Matrix I(n, n);
     int64_t value = static_cast<int64_t>(1);
 
-    for (uint64_t i = 0; i < I.Size(); ++i)
+    for (uint64_t i = 0; i < n; ++i)
         I.InsertAtCoord(value, i, i);
     return I;
 }
@@ -20,9 +20,9 @@ Matrix Matrix::Zeroes(uint64_t n) {
     Matrix Z(n, n);
     int64_t value = static_cast<int64_t>(0);
 
-    for (uint64_t i = 0; i < Z.Size(); ++i) {
+    for (uint64_t i = 0; i < n; ++i)
         Z.InsertAtCoord(value, i, i);
-    }
+        
     return Z;
 }
 

@@ -66,8 +66,9 @@ TEST_CASE("Associativity: A(BC) = (AB)C", "[matrix][algebra]") {
 
 TEST_CASE("Identity matrix: AI = IA = A", "[matrix][algebra]") {
 
-    Matrix A(5, 5);
-    Matrix I = Matrix::Identity(5);
+    uint64_t n = 5;
+    Matrix A(n, n);
+    Matrix I = Matrix::Identity(n);
 
     Matrix left = A*I;
     Matrix middle = I*A;
@@ -78,6 +79,17 @@ TEST_CASE("Identity matrix: AI = IA = A", "[matrix][algebra]") {
 }
 
 TEST_CASE("Zero matrix product: A0 = 0A = 0", "[matrix][algebra]") {
+
+    uint64_t n = 3;
+    Matrix A(n, n);
+    Matrix Z = Matrix::Zeroes(n);
+
+    Matrix left = A*Z;
+    Matrix middle = Z*A;
+
+    REQUIRE(left == middle);
+    REQUIRE(left == Z);
+    REQUIRE(middle == Z);
 }
 
 // TEST_CASE("Incompatible dimensions: AB may not be possible", "[matrix][algebra]") {
