@@ -233,3 +233,32 @@ TEST_CASE("Zero divisors: AB = 0 does not imply A = 0 or B = 0", "[matrix][algeb
     REQUIRE_FALSE(B == Z); 
     REQUIRE(A * B == Z);
 }
+
+TEST_CASE("Associative Law of Multiplication: A(BC) = (AB)C", "[matrix][algebra]") {
+
+    uint64_t n = 2;
+    Matrix A(n, n);
+    Matrix B(n, n);
+    Matrix C(n, n);
+
+    A.Randomize();
+    B.Randomize();
+    C.Randomize();
+
+    Matrix left = A*(B*C);
+    Matrix right = (A*B)*C;
+
+    REQUIRE(left == right);
+}
+
+// TEST_CASE("Involution Property of Inverses: if (-1)A then (-1((-1)A)) = A", "[matrix][algebra]") {
+//     return;
+// }
+
+// TEST_CASE("Inverse of Product Rule: if (-1)A and (-1)B exist then (-1)(AB) = (-1)A*(-1)*B", "[matrix][algebra]") {
+//     return;
+// }
+
+// TEST_CASE("Negation produces additive inverses: A + (-1)A = 0", "[matrix][algebra]") {
+//     return;
+// }
