@@ -86,6 +86,34 @@ TEST_CASE("Associative Law of Scalar Multiplication: c1(c2A) = (c1*c2)A", "[matr
 
 }
 
+TEST_CASE("Zero Matrix Annihilates all Products: 0A = 0", "[matrix][algebra]") {
+
+    uint64_t n = 3;
+    Matrix A(n, n);
+    Matrix Z = Matrix::Zeroes(n);
+
+    A.Randomize();
+
+    Matrix zFirst = Z*A;
+    Matrix zLast = A*Z;
+
+    REQUIRE(zFirst == Z);
+    REQUIRE(zLast == Z);
+}
+
+TEST_CASE("Zero Matrix is an identity for Addition: A + 0 = A", "[matrix][algebra]") {
+    
+    uint64_t n = 3;
+    Matrix A(n, n);
+    Matrix Z = Matrix::Zeroes(n);
+
+    A.Randomize();
+
+    Matrix left = A + Z;
+
+    REQUIRE(left == A);
+}
+
 TEST_CASE("Right Distributive law: A(B+C) = AB + AC", "[matrix][algebra]") {
 
     Matrix A(2, 2);
