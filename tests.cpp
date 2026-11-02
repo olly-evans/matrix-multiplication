@@ -37,10 +37,24 @@ TEST_CASE("Distributive Law of a Scalar over Matrices: c(A + B) = cA + cB", "[ma
     uint64_t scalar = 8;
 
     Matrix left = scalar*(A+B);
-    Matrix right = scalar*A + scalar*B;
+    Matrix right = (scalar*A) + (scalar*B);
 
     REQUIRE(left == right);
 }
+
+TEST_CASE("Distributive Law of Scalars over a Matrix: (c1 + c2)A = c1A + c2A", "[matrix][algebra]") {
+
+    uint64_t n = 8;
+    Matrix A(n, n);
+
+    uint64_t c1 = 2;
+    uint64_t c2 = 3;
+    
+    Matrix left = (c1 + c2)*A;
+    Matrix right = (c1*A) + (c2*A);
+
+    REQUIRE(left == right);
+} 
 
 TEST_CASE("Right Distributive law: A(B+C) = AB + AC", "[matrix][algebra]") {
 
