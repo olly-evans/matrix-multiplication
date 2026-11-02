@@ -6,6 +6,10 @@ Matrix::Matrix(uint64_t nRows, uint64_t nCols) :
     data = new int64_t[rows * cols]();
 }
 
+Matrix::~Matrix() {
+    delete[] data;
+}
+
 Matrix Matrix::Identity(uint64_t n) {
     Matrix I(n, n);
     int64_t value = static_cast<int64_t>(1);
@@ -25,8 +29,12 @@ Matrix Matrix::Zeroes(uint64_t n) {
     return Z;
 }
 
-Matrix::~Matrix() {
-    delete[] data;
+void Matrix::Randomize() {
+
+    for (uint64_t i = 0; i < Size(); i++) {
+        int64_t num = rand() % (MAX_RANDOM_ELEMENT + 1);
+        InsertAtIndex(num, i);
+    }
 }
 
 uint64_t CheckedSize(uint64_t r, uint64_t c) {
@@ -195,37 +203,3 @@ uint64_t Matrix::GetCols() const {
 int64_t Matrix::At(uint64_t index) const {
     return *(data + index);
 }
-
-void Matrix::Randomize() {
-
-    for (uint64_t i = 0; i < Size(); i++) {
-        int64_t num = rand() % (MAX_RANDOM_ELEMENT + 1);
-        InsertAtIndex(num, i);
-    }
-}
-
-// int main() {
-
-//     /* 3x3 and 3x3 example. */
-//     Matrix m1(3, 3);
-//     Matrix m2(3, 3);
-//     Matrix I = Matrix::Identity(12);
-//     Matrix Z = Matrix::Zeroes(3);
-    
-//     m1.Randomize();
-//     m2.Randomize();
-
-//     m1.Print();
-//     std::cout << "\n";
-//     m2.Print();
-//     std::cout << "\n";
-//     I.Print();
-//     std::cout << "\n";
-//     Z.Print();
-
-//     Matrix result = m1 * m2;
-
-//     std::cout << "\n";
-//     result.Print();
-
-// }

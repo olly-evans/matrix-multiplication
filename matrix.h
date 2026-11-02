@@ -17,11 +17,12 @@ class Matrix {
     public:
 
         Matrix(uint64_t rows, uint64_t cols);
+        ~Matrix();
 
         static Matrix Identity(uint64_t n);
         static Matrix Zeroes(uint64_t n);
+        void Randomize();
 
-        ~Matrix();
 
         void Print() const;
         [[nodiscard]] uint64_t Size() const;
@@ -38,7 +39,6 @@ class Matrix {
         [[nodiscard]] uint64_t GetCols() const;
         [[nodiscard]] int64_t At(uint64_t index) const;
 
-        void Randomize();
 
     private:
         
