@@ -8,9 +8,8 @@ Matrix::Matrix(uint64_t nRows, uint64_t nCols) :
     cols(nCols),
     elements(nRows*nCols) {
 
-    //error check rows/cols.
     if (nRows < 0 || nCols < 0)
-        std::cout << "Dimensions of Matrix cannot be less than zero." << "\n";
+        std::cerr << "Dimension of Matrix cannot be less than zero." << std::endl;
 
     data = new uint64_t[rows * cols]();
 }
@@ -37,7 +36,21 @@ uint64_t Matrix::Size() {
     return elements;
 }
 
-void Matrix::Insert(uint64_t value, uint64_t index) {
+void Matrix::InsertAtIndex(uint64_t value, uint64_t index) {
+
+    if (!(index < Size()))
+        std::cerr << "Index is out of matrix bounds - cannot insert." << std::endl;
+    uint64_t* dest = data + index;
+    *dest = value;
+}
+
+void Matrix::InsertAtCoord(uint64_t value, uint64_t row, uint64_t col) {
+
+    uint64_t index = row*cols + col;
+
+    if (!(index < Size()))
+        std::cerr << "Coordinate is out of matrix bounds - cannot insert." << std::endl;
+
     uint64_t* dest = data + index;
     *dest = value;
 }
@@ -45,36 +58,36 @@ void Matrix::Insert(uint64_t value, uint64_t index) {
 void Matrix::Add(Matrix& B) {
     
     if (rows != B.GetRows())
-        std::cerr << "Rows differing - cannot add.";
+        std::cerr << "Row number mismatch - cannot add." << std::endl;
 
     if (cols != B.GetCols())
-        std::cerr << "Cols differing - cannot add.";
+        std::cerr << "Column number mismatch - cannot add." << std::endl;
 
     for (uint64_t i = 0; i < elements; i++) {
         uint64_t value = GetElement(i) + B.GetElement(i);
-        Insert(value, i);
+        InsertAtIndex(value, i);
     }
 }
 
 void Matrix::Subtract(Matrix& B) {
     if (rows != B.GetRows())
-        std::cerr << "Rows differing - cannot subtract.";
+        std::cerr << "Row number mismatch - cannot subtract." << std::endl;
     
     if (cols != B.GetCols())
-        std::cerr << "Cols differing - cannot subtract.";
+        std::cerr << "Col number mismatch - cannot subtract." << std::endl;
 
     for (uint64_t i = 0; i < elements; i++) {
         uint64_t value = GetElement(i) - B.GetElement(i);
-        Insert(value, i);
+        InsertAtIndex(value, i);
     }
 }
 
 Matrix Matrix::Multiply(Matrix& B) {
     
     if (GetCols() != B.GetRows())
-        std::cerr << "Matrix A must have cols equal to rows of Matrix B to multiply.";
+        std::cerr << "Matrix A must have columns equal to rows of Matrix B to multiply." << std::endl;
 
-    Matrix result = Matrix(GetRows(), B.GetCols());
+    Matrix result(GetRows(), B.GetCols());
 
     for (uint64_t index = 0; index < result.Size(); index++) {
 
@@ -97,7 +110,7 @@ Matrix Matrix::Multiply(Matrix& B) {
             sum += GetElement(nextRowElement) * B.GetElement(nextColElement);
         }
 
-        result.Insert(sum, index);
+        result.InsertAtIndex(sum, index);
     }
     return result;
 }
@@ -119,12 +132,12 @@ int main() {
     Matrix m1(3, 3);
     Matrix m2(3, 3);
     
-    m1.Insert(12, 3);
-    m1.Insert(5, 0);
-    m1.Insert(2, 5);
+    m1.InsertAtCoord(3, 0, 0);
+    m1.InsertAtCoord(5, 2, 0);
+    m1.InsertAtCoord(2, 1, 1);
 
-    m2.Insert(5, 0);
-    m2.Insert(5, 2);
+    m2.InsertAtCoord(5, 0, 0);
+    m2.InsertAtCoord(5, 2, 2);
 
     m1.Print();
     std::cout << "\n";

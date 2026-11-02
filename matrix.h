@@ -1,5 +1,4 @@
 #pragma once
-
 #include <cstdint>
 #include <array>
 
@@ -12,7 +11,8 @@ class Matrix {
         void Print();
         uint64_t Size();
 
-        void Insert(uint64_t value, uint64_t index);
+        void InsertAtIndex(uint64_t value, uint64_t index);
+        void InsertAtCoord(uint64_t value, uint64_t row, uint64_t col);
 
         void Add(Matrix& added);
         void Subtract(Matrix& subtract);
