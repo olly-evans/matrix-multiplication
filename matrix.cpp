@@ -51,57 +51,63 @@ uint64_t Matrix::GetElement(uint64_t index) {
     return *(data + index);
 }
 
-void Matrix::Add(Matrix& add) {
+void Matrix::Add(Matrix& B) {
     
-    if (rows != add.GetRows())
+    if (rows != B.GetRows())
         std::cerr << "Rows differing - cannot add.";
 
-    if (cols != add.GetCols())
+    if (cols != B.GetCols())
         std::cerr << "Cols differing - cannot add.";
 
     for (uint64_t i = 0; i < elements; i++) {
-        uint64_t value = GetElement(i) + add.GetElement(i);
+        uint64_t value = GetElement(i) + B.GetElement(i);
         Insert(value, i);
     }
 }
 
-void Matrix::Subtract(Matrix& subtract) {
-    if (rows != subtract.GetRows())
+void Matrix::Subtract(Matrix& B) {
+    if (rows != B.GetRows())
         std::cerr << "Rows differing - cannot subtract.";
     
-    if (cols != subtract.GetCols())
+    if (cols != B.GetCols())
         std::cerr << "Cols differing - cannot subtract.";
 
     for (uint64_t i = 0; i < elements; i++) {
-        uint64_t value = GetElement(i) - subtract.GetElement(i);
+        uint64_t value = GetElement(i) - B.GetElement(i);
         Insert(value, i);
     }
 }
 
-Matrix Matrix::Multiply(Matrix& multiply) {
+Matrix Matrix::Multiply(Matrix& B) {
     
-    if (cols != multiply.GetRows())
+    if (cols != B.GetRows())
         std::cerr << "Matrix A must have cols equal to rows of Matrix B to multiply.";
 
-    Matrix result = Matrix(rows, multiply.GetCols());
+    Matrix result = Matrix(rows, B.GetCols());
 
     for (uint64_t index = 0; index < result.Size(); index++) {
 
         uint64_t sum = 0;
 
+        /* Filling out new matrix. Hence result dimensions. */
         const uint64_t row = index / result.GetCols(); // 2 / 2 = 1
         const uint64_t col = index % result.GetCols(); // 2 % 2 = 0
 
-        const uint64_t rowStart = row*result.GetCols();
+        /* First element index in required row/col */
+        const uint64_t rowStart = row*GetCols();
         const uint64_t colStart = col;
 
-        for (uint64_t i = 0; i < result.GetCols(); i++) {
-            sum += GetElement(rowStart + i) * multiply.GetElement(colStart + (i*result.GetCols()));
+        for (uint64_t i = 0; i < GetRows(); i++) {
+
+            /* Incrementing over  appropriate row and column. */
+            uint64_t nextRowElement = rowStart + i;
+            uint64_t nextColElement = colStart + (i*B.GetCols());
+
+            sum += GetElement(nextRowElement) * B.GetElement(nextColElement);
         }
 
         result.Insert(sum, index);
     }
-
     return result;
 }
 
@@ -120,6 +126,7 @@ int main() {
     
     m1.Insert(12, 3);
     m1.Insert(5, 0);
+    m1.Insert(2, 5);
 
     m2.Insert(5, 0);
     m2.Insert(5, 2);
