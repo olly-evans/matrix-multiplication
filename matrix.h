@@ -31,9 +31,7 @@ class Matrix {
 
         Matrix operator+(const Matrix& B) const;
         Matrix operator-(const Matrix& B) const;
-
         Matrix operator*(const Matrix& B) const;
-
         bool operator==(const Matrix& B) const;
 
         [[nodiscard]] uint64_t GetRows() const;
